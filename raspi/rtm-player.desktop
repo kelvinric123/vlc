@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=RTM TV2 Player
+Comment=Auto-start RTM TV2 VLC player on boot
+Exec=/home/pi/qmed-utils/queuescreen/vlc/raspi/rtm-autostart.sh
+Icon=vlc
+Terminal=false
+Hidden=false
+X-GNOME-Autostart-enabled=true
+StartupNotify=false
+

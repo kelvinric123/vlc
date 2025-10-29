@@ -29,13 +29,23 @@ cvlc \
     --no-video-deco \
     --no-embedded-video \
     --no-autoscale \
-    --no-video-on-top \
+    --video-on-top \
     --no-qt-video-autoresize \
     --zoom=1 \
     --network-caching=2000 \
     --http-reconnect \
     --loop \
     "$(cat $PARENT_DIR/url.txt)" 2>/dev/null &
+
+VLC_PID=$!
+
+# Wait a moment for VLC window to appear
+sleep 2
+
+# Ensure VLC window stays on top using wmctrl (if available)
+if command -v wmctrl &> /dev/null; then
+    wmctrl -r "VLC" -b add,above 2>/dev/null || true
+fi
 
 echo "VLC started! Playing RTM TV2 at ${VIDEO_WIDTH}x${VIDEO_HEIGHT}"
 echo "Press Ctrl+C to stop, or run: pkill vlc"

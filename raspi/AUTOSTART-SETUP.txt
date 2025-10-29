@@ -1,0 +1,135 @@
+================================================================================
+  RTM TV2 PLAYER - AUTOSTART SETUP GUIDE
+================================================================================
+
+OVERVIEW:
+This setup makes the VLC player start automatically when your Raspberry Pi
+boots up, appearing on top of your queuescreen at the custom dimensions
+you configured.
+
+================================================================================
+INSTALLATION (One-Time Setup)
+================================================================================
+
+1. Transfer files to your Raspberry Pi:
+   - Copy the entire vlc/raspi folder to your Pi
+
+2. Navigate to the directory:
+   cd ~/qmed-utils/queuescreen/vlc/raspi
+   (Adjust path based on where you placed the files)
+
+3. Run the setup script:
+   chmod +x setup-autostart.sh
+   ./setup-autostart.sh
+
+4. Reboot your Raspberry Pi:
+   sudo reboot
+
+Done! The VLC player will now start automatically on every boot.
+
+================================================================================
+HOW IT WORKS
+================================================================================
+
+Boot Sequence:
+  1. Raspberry Pi boots
+  2. Desktop environment loads
+  3. Queuescreen starts in Chrome (kiosk mode)
+  4. After 15 seconds delay...
+  5. VLC player starts and appears on top at your configured size
+
+The 15-second delay ensures:
+  - Desktop is fully loaded
+  - Queuescreen is displayed first
+  - VLC appears on top of the queuescreen
+
+================================================================================
+VERIFICATION
+================================================================================
+
+Check if autostart is enabled:
+  ls ~/.config/autostart/rtm-player.desktop
+
+View autostart logs:
+  cat ~/qmed-utils/queuescreen/vlc/raspi/autostart.log
+  (or wherever you placed the files)
+
+Test without rebooting:
+  ./rtm-autostart.sh
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: VLC doesn't start on boot
+Solution: Check the log file (autostart.log) for errors
+          Verify the path in ~/.config/autostart/rtm-player.desktop
+          Make sure scripts are executable (chmod +x *.sh)
+
+Problem: VLC starts but wrong size
+Solution: Edit play-rtm-quick.sh and adjust VIDEO_WIDTH/VIDEO_HEIGHT
+
+Problem: VLC appears behind the queuescreen
+Solution: Increase the sleep delay in rtm-autostart.sh (line 20)
+          Install wmctrl: sudo apt-get install wmctrl
+
+Problem: Network not ready, stream fails to load
+Solution: The script waits for network. If it's too quick, increase
+          the sleep time in rtm-autostart.sh
+
+================================================================================
+MANAGEMENT COMMANDS
+================================================================================
+
+Disable autostart (temporarily):
+  rm ~/.config/autostart/rtm-player.desktop
+  (Re-run setup-autostart.sh to re-enable)
+
+Stop VLC manually:
+  pkill vlc
+
+Start VLC manually:
+  ./play-rtm-quick.sh
+
+View what's running:
+  ps aux | grep vlc
+
+================================================================================
+CONFIGURATION FILES
+================================================================================
+
+Main files:
+  • play-rtm-quick.sh       - The VLC player script with dimensions
+  • rtm-autostart.sh        - Autostart wrapper with delays and logging
+  • setup-autostart.sh      - One-time setup script
+  • ~/.config/autostart/rtm-player.desktop - System autostart entry
+
+Logs:
+  • autostart.log           - Startup and error logs
+
+================================================================================
+OPTIONAL ENHANCEMENTS
+================================================================================
+
+Install wmctrl for better window management:
+  sudo apt-get install wmctrl
+  (Helps keep VLC on top of other windows)
+
+Adjust startup delay:
+  Edit rtm-autostart.sh, change "sleep 15" to your preferred delay
+
+Change VLC dimensions:
+  Edit play-rtm-quick.sh, modify VIDEO_WIDTH and VIDEO_HEIGHT
+
+================================================================================
+UNINSTALL
+================================================================================
+
+To completely remove autostart:
+  rm ~/.config/autostart/rtm-player.desktop
+  pkill vlc
+
+The scripts remain in place for manual use if needed.
+
+================================================================================
+
