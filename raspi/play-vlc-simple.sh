@@ -1,0 +1,51 @@
+#!/bin/bash
+# RTM TV2 VLC Player - Raspberry Pi Version (Simple Mode)
+# Uses only basic VLC options for maximum compatibility
+
+echo "=================================================="
+echo "RTM TV2 VLC Player (Simple Mode - Raspberry Pi)"
+echo "=================================================="
+echo ""
+
+# Get script directory
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+url_file="$script_dir/url.txt"
+
+# Check if url.txt exists
+if [ ! -f "$url_file" ]; then
+    echo "❌ Error: url.txt not found!"
+    echo "Please run: ./extract-rtm-url.sh first"
+    exit 1
+fi
+
+# Read URL from file
+STREAM_URL=$(cat "$url_file")
+
+if [ -z "$STREAM_URL" ]; then
+    echo "❌ Error: url.txt is empty!"
+    exit 1
+fi
+
+echo "Stream URL: $STREAM_URL"
+echo ""
+
+# Check if VLC is installed
+if ! command -v cvlc &> /dev/null; then
+    echo "❌ Error: VLC not found!"
+    echo ""
+    echo "Install VLC with:"
+    echo "  sudo apt-get update"
+    echo "  sudo apt-get install vlc"
+    echo ""
+    exit 1
+fi
+
+echo "Starting VLC with basic options..."
+echo ""
+
+# Launch VLC with minimal options (most compatible)
+cvlc "$STREAM_URL"
+
+echo ""
+echo "VLC closed."
+
