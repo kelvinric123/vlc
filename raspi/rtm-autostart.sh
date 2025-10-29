@@ -4,8 +4,8 @@
 # This script starts the VLC player on boot and keeps it on top
 ################################################################################
 
-# Get script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get script directory (compatible with both bash and sh)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Log file
 LOG_FILE="$SCRIPT_DIR/autostart.log"

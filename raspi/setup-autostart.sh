@@ -18,8 +18,8 @@ echo "  RTM TV2 Player - Autostart Setup"
 echo -e "==============================================${NC}"
 echo ""
 
-# Get script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get script directory (compatible with both bash and sh)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Autostart directory
 AUTOSTART_DIR="$HOME/.config/autostart"

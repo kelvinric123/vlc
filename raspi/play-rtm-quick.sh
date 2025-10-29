@@ -6,7 +6,7 @@
 # Custom sized for queue screen layout - adjust dimensions below if needed
 ################################################################################
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Queue Screen Video Dimensions (measured from your layout)
