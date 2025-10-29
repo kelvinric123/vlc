@@ -28,6 +28,10 @@ cvlc \
     --no-video-title-show \
     --no-video-deco \
     --no-embedded-video \
+    --no-autoscale \
+    --no-video-on-top \
+    --no-qt-video-autoresize \
+    --zoom=1 \
     --network-caching=2000 \
     --http-reconnect \
     --loop \
