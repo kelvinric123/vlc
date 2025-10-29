@@ -38,8 +38,13 @@ fi
 echo "Stream URL: $STREAM_URL"
 echo ""
 
-# Check if VLC is installed
-if ! command -v cvlc &> /dev/null; then
+# Check if VLC is installed (try cvlc first, then vlc)
+VLC_CMD=""
+if command -v cvlc &> /dev/null; then
+    VLC_CMD="cvlc"
+elif command -v vlc &> /dev/null; then
+    VLC_CMD="vlc -I dummy"
+else
     echo "❌ Error: VLC not found!"
     echo ""
     echo "Install VLC with:"
@@ -52,12 +57,13 @@ fi
 echo "Window Settings:"
 echo "  Size: ${WIDTH}x${HEIGHT}"
 echo "  Position: ($POS_X, $POS_Y)"
+echo "Using: $VLC_CMD"
 echo ""
 echo "Starting VLC..."
 echo ""
 
 # Launch VLC with custom settings
-cvlc \
+$VLC_CMD \
     --no-embedded-video \
     --width=$WIDTH \
     --height=$HEIGHT \

@@ -29,8 +29,13 @@ fi
 echo "Stream URL: $STREAM_URL"
 echo ""
 
-# Check if VLC is installed
-if ! command -v cvlc &> /dev/null; then
+# Check if VLC is installed (try cvlc first, then vlc)
+VLC_CMD=""
+if command -v cvlc &> /dev/null; then
+    VLC_CMD="cvlc"
+elif command -v vlc &> /dev/null; then
+    VLC_CMD="vlc -I dummy"
+else
     echo "❌ Error: VLC not found!"
     echo ""
     echo "Install VLC with:"
@@ -44,10 +49,11 @@ echo "Starting VLC with:"
 echo "  ✓ Borderless window"
 echo "  ✓ Position: Top-Left (0, 0)"
 echo "  ✓ Size: 800x600"
+echo "Using: $VLC_CMD"
 echo ""
 
 # Launch VLC with reliable options for Raspberry Pi
-cvlc \
+$VLC_CMD \
     --no-embedded-video \
     --width=800 \
     --height=600 \
