@@ -1,12 +1,22 @@
 #!/bin/bash
 ################################################################################
-# RTM TV2 Reliable Extractor & VLC Player for Raspberry Pi
+# RTM TV2 Reliable Extractor & VLC Player for Raspberry Pi (Queue Screen)
 # VLC Version: 3.0.17
 # 
 # This script:
 # 1. Extracts the working RTM TV2 stream URL using Python
-# 2. Launches VLC with optimal flags for Raspberry Pi
+# 2. Launches VLC with optimal flags and CUSTOM DIMENSIONS for queue screen
 # 3. Auto-restarts on stream failure
+#
+# QUEUE SCREEN MODE:
+# - VLC is positioned and sized to fit within your queue screen layout
+# - Video area excludes the right panel (date/time) and bottom bar (branding)
+# - Default: 1670x930 pixels at position (0,0) for 1920x1080 screen
+#
+# TO ADJUST DIMENSIONS:
+# 1. Measure your video display area (exclude UI panels)
+# 2. Edit VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_X, VIDEO_Y below
+# 3. Test and adjust until VLC fits perfectly
 ################################################################################
 
 set -e  # Exit on error
@@ -26,6 +36,20 @@ EXTRACTOR_SCRIPT="$PARENT_DIR/extract-rtm-url.py"
 LOG_FILE="$SCRIPT_DIR/playback.log"
 MAX_RETRIES=3
 RETRY_DELAY=5
+
+# Queue Screen Video Dimensions (measured from queuescreen layout)
+# 
+# MEASUREMENT GUIDE:
+# - Total screen: 1920x1080 (standard HD)
+# - Right panel width: ~250px (date/time display)
+# - Bottom bar height: ~150px (branding area)
+# - Video area: Screen width - right panel, Screen height - bottom bar
+#
+# CURRENT SETTINGS (for 1920x1080 screen):
+VIDEO_WIDTH=1670    # 1920 - 250 = 1670 (leaves space for right panel)
+VIDEO_HEIGHT=930    # 1080 - 150 = 930 (leaves space for bottom bar)
+VIDEO_X=0           # X position (left edge of screen)
+VIDEO_Y=0           # Y position (top edge of screen)
 
 ################################################################################
 # Functions
@@ -120,13 +144,19 @@ play_stream() {
     
     log_message "${YELLOW}Starting VLC playback...${NC}"
     log_message "Stream URL: $url"
+    log_message "${BLUE}Video dimensions: ${VIDEO_WIDTH}x${VIDEO_HEIGHT} at position (${VIDEO_X},${VIDEO_Y})${NC}"
     echo ""
     
-    # VLC options optimized for Raspberry Pi 3.0.17
-    # These flags are tested and reliable for streaming
+    # VLC options optimized for Raspberry Pi 3.0.17 with custom dimensions
+    # Positioned and sized to fit queue screen layout
     $VLC_CMD \
-        --fullscreen \
+        --width=$VIDEO_WIDTH \
+        --height=$VIDEO_HEIGHT \
+        --video-x=$VIDEO_X \
+        --video-y=$VIDEO_Y \
         --no-video-title-show \
+        --no-video-deco \
+        --no-embedded-video \
         --no-osd \
         --quiet \
         --network-caching=2000 \
@@ -146,7 +176,7 @@ play_stream() {
     
     VLC_PID=$!
     log_message "${GREEN}✓ VLC started (PID: $VLC_PID)${NC}"
-    log_message "${GREEN}✓ Playing in fullscreen mode${NC}"
+    log_message "${GREEN}✓ Playing at ${VIDEO_WIDTH}x${VIDEO_HEIGHT} (positioned for queue screen)${NC}"
     echo ""
     
     # Monitor VLC process
